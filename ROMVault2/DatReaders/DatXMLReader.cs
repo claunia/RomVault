@@ -165,6 +165,8 @@ namespace ROMVault2.DatReaders
             // Look for: <notzipped>true</notzipped>
             string notzipped = VarFix.String(head.SelectSingleNode("notzipped"));
             if (notzipped.ToLower() == "true" || notzipped.ToLower() == "yes") thisFileType = FileType.File;
+            if (Settings.FixLevel == eFixLevel.Uncompressed)
+                thisFileType = FileType.File;
 
             tDir.Dat = tDat;
             return true;

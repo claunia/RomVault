@@ -28,7 +28,8 @@ namespace ROMVault2
         TrrntZipLevel3,
         Level1,
         Level2,
-        Level3
+        Level3,
+        Uncompressed
     }
 
     public static class Settings

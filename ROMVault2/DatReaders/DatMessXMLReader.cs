@@ -81,6 +81,8 @@ namespace ROMVault2.DatReaders
                     thisFileType = FileType.ZipFile;
                     break;
             }
+            if (Settings.FixLevel == eFixLevel.Uncompressed)
+                thisFileType = FileType.File;
 
             tDir.Dat = tDat;
             return true;

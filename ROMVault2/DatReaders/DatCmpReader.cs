@@ -142,6 +142,8 @@ namespace ROMVault2.DatReaders
             }
 
             thisFileType = forceZipping.ToLower() != "no" ? FileType.ZipFile : FileType.File;
+            if (Settings.FixLevel == eFixLevel.Uncompressed)
+                thisFileType = FileType.File;
             tDir.Dat = tDat;
             return true;
 

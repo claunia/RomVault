@@ -8,11 +8,17 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using ROMVault2.Properties;
+using System.IO;
+using ROMVault2.RvDB;
 
 namespace ROMVault2
 {
     public partial class FrmSettings : Form
     {
+        public delegate void UpdateDatsDelegate();
+
+        public event UpdateDatsDelegate UpdateDats;
+
         public FrmSettings()
         {
             InitializeComponent();
@@ -29,6 +35,7 @@ namespace ROMVault2
             cboFixLevel.Items.Add("Level1");
             cboFixLevel.Items.Add("Level2");
             cboFixLevel.Items.Add("Level3");
+            cboFixLevel.Items.Add("Uncompressed");
         }
 
         private void FrmConfigLoad(object sender, EventArgs e)
@@ -54,6 +61,26 @@ namespace ROMVault2
 
         private void BtnOkClick(object sender, EventArgs e)
         {
+            if (Settings.FixLevel != (eFixLevel)cboFixLevel.SelectedIndex)
+            {
+                if (Settings.FixLevel == eFixLevel.Uncompressed ||
+                   (eFixLevel)cboFixLevel.SelectedIndex == eFixLevel.Uncompressed)
+                {
+                    DialogResult dlg = MessageBox.Show("Changing from/to uncompressed requires the cache file to be deleted.\nDo you want to proceed?", "Settings", MessageBoxButtons.YesNoCancel);
+
+                    if (dlg == DialogResult.Cancel)
+                        Close();
+
+                    if (dlg != DialogResult.Yes)
+                        return;
+
+                    File.Delete(Settings.CacheFile);
+                    DB.Read(sender, new System.ComponentModel.DoWorkEventArgs(null));
+                    Settings.FixLevel = (eFixLevel)cboFixLevel.SelectedIndex;
+                    UpdateDats();
+                }
+            }
+
             Settings.DatRoot = lblDATRoot.Text;
             Settings.ScanLevel = (eScanLevel)cboScanLevel.SelectedIndex;
             Settings.FixLevel = (eFixLevel)cboFixLevel.SelectedIndex;

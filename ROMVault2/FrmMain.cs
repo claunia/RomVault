@@ -1461,6 +1461,7 @@ namespace ROMVault2
         private void SettingsToolStripMenuItemClick(object sender, EventArgs e)
         {
             FrmSettings fcfg = new FrmSettings();
+            fcfg.UpdateDats += UpdateDats;
             fcfg.ShowDialog(this);
             fcfg.Dispose();
         }
